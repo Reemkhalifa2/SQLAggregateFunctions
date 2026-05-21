@@ -82,4 +82,23 @@ LEFT JOIN Orders
 WHERE Orders.OrderID IS NULL;
 
 --Task 6: Sales Performance
+--- 1. Find total sales revenue (Quantity × Price)
+SELECT SUM(Quantity*Price) AS TotalSales,
+FROM Sales;
+--- 2. Find total quantity sold per product
+SELECT SUM(Quantity) AS TotalQuantity,
+FROM Sales
+GROUP BY ProductID;
+--- 3. Find average price per product
+SELECT SUM(Price)/COUNT(ProductID) AS averagePrice,
+FROM Sales
+GROUP BY ProductID;
+
+--4. Find best-selling product (highest quantity sold)
+SELECT 
+    ProductID,
+    SUM(Quantity) AS TotalQuantity
+FROM Sales
+GROUP BY ProductID
+ORDER BY TotalQuantity DESC;
 
