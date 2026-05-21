@@ -123,3 +123,22 @@ INNER JOIN Products
 GROUP BY Products.ProductName
 ORDER BY Products.ProductName DESC;
 
+
+--Task 8: Department Salary Statistics
+SELECT 
+    DepartmentID,
+    MAX(Salary) AS MaxSalary
+    MIN(Salary) AS MinSalary
+    AVG(Salary) AS AvgSalary
+FROM Employees
+GROUP BY DepartmentID;
+
+SELECT 
+    DepartmentID,
+    MAX(Salary) AS MaxSalary,
+    MIN(Salary) AS MinSalary,
+    (MAX(Salary) - MIN(Salary)) AS SalaryDifference
+FROM Employees
+GROUP BY DepartmentID;
+
+
