@@ -141,4 +141,33 @@ SELECT
 FROM Employees
 GROUP BY DepartmentID;
 
+--Task 9: Employee Performance Analysis
+SELECT 
+    DepartmentID,
+    AVG(Salary) AS AvgSalary
+FROM Employees
+GROUP BY DepartmentID
+HAVING AVG(Salary) > 6000;
+
+
+SELECT 
+    DepartmentID,
+    SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY DepartmentID
+HAVING SUM(Salary) > 20000;
+
+SELECT 
+    DepartmentID,
+    COUNT(EmployeeID) AS TotalEmployees
+FROM Employees
+GROUP BY DepartmentID
+HAVING COUNT(EmployeeID) > 3;
+
+SELECT 
+    DepartmentID,
+    AVG(Salary) AS AvgSalary
+FROM Employees
+GROUP BY DepartmentID
+ORDER BY AvgSalary DESC;
 
