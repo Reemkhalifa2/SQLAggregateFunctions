@@ -215,3 +215,25 @@ SELECT p.ProductID
 FROM Products p
 LEFT JOIN Sales s ON p.ProductID = s.ProductID
 WHERE s.ProductID IS NULL;
+
+--Task 16
+SELECT Products.ProductName , SUM(Sales.Price) 
+FROM Sales
+LEFT JOIN Products ON Sales.ProductID = Products.ProductID
+GROUP BY Products.ProductName;
+
+SELECT Products.ProductName , SUM(Sales.Quantity) 
+FROM Sales
+LEFT JOIN Products ON Sales.ProductID = Products.ProductID
+GROUP BY Products.ProductName
+ORDER BY SUM(Sales.Quantity) DESC;
+
+SELECT Products.ProductName , SUM(Sales.Quantity)*SUM(Sales.Price)  AS PROFIT 
+FROM Sales
+LEFT JOIN Products ON Sales.ProductID = Products.ProductID
+GROUP BY Products.ProductName
+ORDER BY SUM(Sales.Quantity) DESC;
+
+
+
+
