@@ -1,173 +1,217 @@
+use CompanyAnalytics
 --Task 1: Basic Aggregate Functions
-SELECT SUM(Salary) AS Total_Salary,
-		SUM(Salary) / COUNT(Salary) AS Verage_Salary,
-		MAX(Salary) AS highest_salary,
-		MIN(Salary) AS lowest_salary,
-		COUNT(SSN)
-		FROM Employee;
+
+SELECT SUM(Salary) AS TotalSalary,
+	 AVG(Salary) AS AverageSalary ,
+	 MAX(Salary) AS HighestSalary,
+	 MIN(Salary) AS LowestSalary ,
+	 COUNT(*) AS TotalEmployees FROM Employees;
 
 
 --Task 2: GROUP BY with Departments
-SELECT SUM(Salary) AS Total_Salary,
-		SUM(Salary) / COUNT(Salary) AS Verage_Salary,
-		COUNT(SSN)
-		FROM Employee
-		GROUP BY Dnum
-		ORDER BY Dnum;
+
+SELECT DepartmentID, SUM(Salary) AS TotalSalary,
+AVG(Salary) AS AverageSalary,
+COUNT(*) AS NumEmployees
+FROM Employees
+GROUP BY DepartmentID
+ORDER BY DepartmentID;
 
 --Task 3: HAVING Clause Filtering
-SELECT Dnum ,SUM(Salary)AS Total_Salary FROM Employee
-GROUP BY Dnum
+
+SELECT DepartmentID, SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY DepartmentID
 HAVING SUM(Salary) > 10000;
 
-SELECT Dnum ,COUNT(SSN) AS Employees FROM Employee
-GROUP BY Dnum
-HAVING COUNT(SSN) > 5;
+SELECT DepartmentID, COUNT(*) AS NumEmployees
+FROM Employees
+GROUP BY DepartmentID
+HAVING COUNT(*) > 5;
 
-SELECT Dnum ,SUM(Salary)/COUNT(SSN)AS Avrage_Salary FROM Employee
-GROUP BY Dnum
-HAVING SUM(Salary)/COUNT(SSN) > 5000;
+SELECT DepartmentID, AVG(Salary) AS AvgSalary
+FROM Employees
+GROUP BY DepartmentID
+HAVING AVG(Salary) > 5000;
 
+--Task 4
 
---Task 4: Orders Analysis
+SELECT SUM(Amount) AS TotalRevenue ,
+ AVG(Amount) AS AvgOrder ,
+ COUNT(*) AS TotalOrders ,
+ MAX(Amount) AS MaxOrder, MIN(Amount) AS MinOrder FROM Orders;
 
-SELECT 
-		SUM(Amount) as total_revenue , 
-		SUM(Amount)/Count(OrderID)  as AVerage,
-		COUNT(OrderID) as Total_Id
-		MAX(Amount) AS Max_amount,
-		MIN(Amount) AS Min_amount,
-		FROM Orders;
-
-SELECT 
-    CustomerID,
-    SUM(Amount) AS TotalSpent
+SELECT CustomerID, SUM(Amount) AS TotalSpent
 FROM Orders
 GROUP BY CustomerID;
 
---Task 5: Customers Order Summary
+--Task 5
 
----1. Show number of orders per customer
-SELECT Customers.CustomerName ,COUNT(Orders.OrderID) AS TotalOrders
-FROM Customers
-LEFT JOIN Orders
-    ON Customers.CustomerID = Orders.CustomerID
-GROUP BY Customers.CustomerID;
+SELECT CustomerID, COUNT(OrderID) AS NumOrders,
+CustomerID, SUM(Amount) AS TotalSpent
+FROM Orders
+GROUP BY CustomerID;
 
+SELECT CustomerID, SUM(Amount) AS TotalSpent
+FROM Orders
+GROUP BY CustomerID
+HAVING SUM(Amount) > 1000;
 
----2. Show total amount spent per customer
-SELECT Customers.CustomerName ,SUM(Orders.Amount) AS Totalspent 
-FROM Customers
-LEFT JOIN Orders
-    ON Customers.CustomerID = Orders.CustomerID
-GROUP BY Customers.CustomerID;
-
-
----3. Show customers who spent more than 1000 total
-SELECT Customers.CustomerName ,SUM(Orders.Amount) AS Totalspent 
-FROM Customers
-LEFT JOIN Orders
-    ON Customers.CustomerID = Orders.CustomerID
-GROUP BY Customers.CustomerID
-HAVING SUM(Orders.Amount) >1000;
-
----4. Show customers with no orders
-
-SELECT 
-    Customers.CustomerID,
-    Customers.CustomerName
-FROM Customers
-LEFT JOIN Orders
-    ON Customers.CustomerID = Orders.CustomerID
+SELECT Customers.CustomerID, Customers.CustomerName
+FROM Customers 
+LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID
 WHERE Orders.OrderID IS NULL;
 
---Task 6: Sales Performance
---- 1. Find total sales revenue (Quantity × Price)
-SELECT SUM(Quantity*Price) AS TotalSales,
-FROM Sales;
---- 2. Find total quantity sold per product
-SELECT SUM(Quantity) AS TotalQuantity,
-FROM Sales
-GROUP BY ProductID;
---- 3. Find average price per product
-SELECT SUM(Price)/COUNT(ProductID) AS averagePrice,
+--Task6
+
+SELECT SUM(Quantity * Price) AS TotalRevenue FROM Sales;
+
+SELECT ProductID, SUM(Quantity) AS TotalQty, AVG(Price) AS AvgPrice
 FROM Sales
 GROUP BY ProductID;
 
---4. Find best-selling product (highest quantity sold)
-SELECT 
-    ProductID,
-    SUM(Quantity) AS TotalQuantity
+SELECT ProductID, SUM(Quantity) AS TotalQty
 FROM Sales
 GROUP BY ProductID
-ORDER BY TotalQuantity DESC;
+ORDER BY TotalQty DESC;
 
---Task 7: Mixed Aggregation Challenge
-SELECT SUM(OrderDetails.Quantity) AS TotalQuantiy, Products.ProductName
+
+--Task7
+
+SELECT Products.ProductName, SUM(OrderDetails.Quantity) AS TotalQty
+FROM OrderDetails 
+JOIN Products  ON OrderDetails.ProductID = Products.ProductID
+GROUP BY Products.ProductName;
+
+SELECT ProductID, SUM(Quantity) AS TotalQty
 FROM OrderDetails
-LEFT JOIN OrderDetails
-ON OrderDetails.ProductID  = Products.ProductID
-GROUP BY ProductName;
+GROUP BY ProductID
+HAVING SUM(Quantity) > 50;
 
-SELECT SUM(OrderDetails.Quantity) AS TotalQuantiy, Products.ProductName
+SELECT ProductID, COUNT(DISTINCT OrderID) AS NumOrders
 FROM OrderDetails
-LEFT JOIN OrderDetails
-ON OrderDetails.ProductID  = Products.ProductID
-GROUP BY ProductName
-HAVING SUM(OrderDetails.Quantity)>50;
+GROUP BY ProductID;
 
-SELECT Products.ProductName,COUNT(OrderDetails.OrderID) AS TotalOrders
+SELECT ProductID, SUM(Quantity) AS TotalQty
 FROM OrderDetails
-INNER JOIN Products
-    ON OrderDetails.ProductID = Products.ProductID
-GROUP BY Products.ProductName
-ORDER BY Products.ProductName DESC;
+GROUP BY ProductID
+ORDER BY TotalQty DESC;
 
+--Task8
 
---Task 8: Department Salary Statistics
-SELECT 
-    DepartmentID,
-    MAX(Salary) AS MaxSalary
-    MIN(Salary) AS MinSalary
-    AVG(Salary) AS AvgSalary
+SELECT DepartmentID,
+       MAX(Salary) AS MaxSalary,
+       MIN(Salary) AS MinSalary,
+       AVG(Salary) AS AvgSalary,
+       (MAX(Salary) - MIN(Salary)) AS SalaryDifference
 FROM Employees
 GROUP BY DepartmentID;
 
-SELECT 
-    DepartmentID,
-    MAX(Salary) AS MaxSalary,
-    MIN(Salary) AS MinSalary,
-    (MAX(Salary) - MIN(Salary)) AS SalaryDifference
-FROM Employees
-GROUP BY DepartmentID;
+--Task 9
 
---Task 9: Employee Performance Analysis
-SELECT 
-    DepartmentID,
-    AVG(Salary) AS AvgSalary
+SELECT DepartmentID, AVG(Salary) AS AvgSalary
 FROM Employees
 GROUP BY DepartmentID
-HAVING AVG(Salary) > 6000;
+HAVING AVG(Salary) > 6000
+ORDER BY AvgSalary DESC;
 
-
-SELECT 
-    DepartmentID,
-    SUM(Salary) AS TotalSalary
+SELECT DepartmentID, SUM(Salary) AS TotalSalary
 FROM Employees
 GROUP BY DepartmentID
 HAVING SUM(Salary) > 20000;
 
-SELECT 
-    DepartmentID,
-    COUNT(EmployeeID) AS TotalEmployees
+SELECT DepartmentID, COUNT(*) AS NumEmployees
 FROM Employees
 GROUP BY DepartmentID
-HAVING COUNT(EmployeeID) > 3;
+HAVING COUNT(*) > 3;
 
-SELECT 
-    DepartmentID,
-    AVG(Salary) AS AvgSalary
-FROM Employees
+--Task 10
+SELECT CustomerID, SUM(Amount) AS TotalSpent, AVG(Amount) AS AvgOrder,
+COUNT(*) AS NumOrders
+FROM Orders
+GROUP BY CustomerID;
+
+SELECT CustomerID, SUM(Amount) AS TotalSpent
+FROM Orders
+GROUP BY CustomerID
+HAVING SUM(Amount) > 500;
+
+--Task11
+
+SELECT ProductID, SUM(Quantity * Price) AS Revenue,
+ SUM(Quantity) AS TotalQty
+,AVG(Price) AS AvgPrice
+FROM Sales
+GROUP BY ProductID;
+
+SELECT ProductID, SUM(Quantity * Price) AS Revenue
+FROM Sales
+GROUP BY ProductID
+HAVING SUM(Quantity * Price) > 1000;
+
+
+--Task12
+SELECT COUNT(*) AS TotalOrders,
+	SUM(Amount) AS TotalRevenue ,
+	AVG(Amount) AS AvgAmount,
+	MAX(Amount) AS MaxAmount, MIN(Amount) AS MinAmount FROM Orders;
+
+SELECT CustomerID, COUNT(*) AS NumOrders
+FROM Orders
+GROUP BY CustomerID
+HAVING COUNT(*) > 2;
+
+
+--Task 13
+SELECT Customers.CustomerName, COUNT(Orders.OrderID) AS TotalOrders,
+SUM(Orders.Amount) AS TotalSpent
+FROM Customers 
+JOIN Orders  ON Customers.CustomerID = Orders.CustomerID
+GROUP BY Customers.CustomerName;
+
+
+SELECT Customers.CustomerName, SUM(Orders.Amount) AS TotalSpent
+FROM Customers
+JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+GROUP BY Customers.CustomerName
+HAVING SUM(Orders.Amount) > 1000;
+
+SELECT Customers.CustomerName, SUM(Orders.Amount) AS TotalSpent
+FROM Customers 
+JOIN Orders  ON Customers.CustomerID = Orders.CustomerID
+GROUP BY Customers.CustomerName
+ORDER BY TotalSpent DESC;
+
+
+--Task 14
+SELECT DepartmentID , MAX(Salary)FROM Employees 
 GROUP BY DepartmentID
-ORDER BY AvgSalary DESC;
+HAVING MAX(Salary) > 8000;
 
+SELECT DepartmentID , MIN(Salary)FROM Employees 
+GROUP BY DepartmentID
+HAVING MAX(Salary) < 3000;
+
+SELECT DepartmentID , SUM(Salary) / COUNT(*) FROM Employees 
+GROUP BY DepartmentID
+HAVING SUM(Salary) / COUNT(*) > 4000 AND SUM(Salary) / COUNT(*)<7000;
+
+SELECT DepartmentID  FROM Employees 
+GROUP BY DepartmentID
+HAVING COUNT(EmployeeID)>2;
+
+
+--Task 15
+SELECT ProductID, SUM(Quantity * Price) AS Revenue
+FROM Sales
+GROUP BY ProductID;
+
+SELECT ProductID, SUM(Quantity) AS TotalQty,SUM(Quantity * Price) AS Revenue
+FROM Sales
+GROUP BY ProductID
+ORDER BY Revenue DESC;
+
+SELECT p.ProductID
+FROM Products p
+LEFT JOIN Sales s ON p.ProductID = s.ProductID
+WHERE s.ProductID IS NULL;
