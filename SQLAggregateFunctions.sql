@@ -102,3 +102,24 @@ FROM Sales
 GROUP BY ProductID
 ORDER BY TotalQuantity DESC;
 
+--Task 7: Mixed Aggregation Challenge
+SELECT SUM(OrderDetails.Quantity) AS TotalQuantiy, Products.ProductName
+FROM OrderDetails
+LEFT JOIN OrderDetails
+ON OrderDetails.ProductID  = Products.ProductID
+GROUP BY ProductName;
+
+SELECT SUM(OrderDetails.Quantity) AS TotalQuantiy, Products.ProductName
+FROM OrderDetails
+LEFT JOIN OrderDetails
+ON OrderDetails.ProductID  = Products.ProductID
+GROUP BY ProductName
+HAVING SUM(OrderDetails.Quantity)>50;
+
+SELECT Products.ProductName,COUNT(OrderDetails.OrderID) AS TotalOrders
+FROM OrderDetails
+INNER JOIN Products
+    ON OrderDetails.ProductID = Products.ProductID
+GROUP BY Products.ProductName
+ORDER BY Products.ProductName DESC;
+
