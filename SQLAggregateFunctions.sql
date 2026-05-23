@@ -300,3 +300,19 @@ JOIN Products  ON Sales.ProductID = Products.ProductID
 JOIN Categories  ON Products.CategoryID = Categories.CategoryID
 GROUP BY Categories.CategoryName
 ORDER BY Revenue DESC;
+
+--task 20
+SELECT COUNT(Salary) 
+FROM Employees;
+
+SELECT DepartmentID, COUNT(Salary) 
+FROM Employees
+GROUP BY DepartmentID;
+
+SELECT AVG(Salary)
+FROM Employees;
+
+SELECT DepartmentID
+FROM Employees
+GROUP BY DepartmentID
+HAVING COUNT(Salary) = 0;
