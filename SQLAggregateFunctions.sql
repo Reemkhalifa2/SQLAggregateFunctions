@@ -252,3 +252,27 @@ ORDER BY Revenue DESC;
 SELECT MONTH(SaleDate) AS Month, COUNT(*) 
 FROM Sales
 GROUP BY MONTH(SaleDate);
+
+
+
+--Task 18
+SELECT CustomerID, COUNT(*) AS NumOrders
+FROM Orders
+GROUP BY CustomerID
+HAVING COUNT(*) > 5;
+
+SELECT CustomerID, AVG(Amount) AS AvgOrder
+FROM Orders
+GROUP BY CustomerID
+HAVING AVG(Amount) > 200;
+
+SELECT CustomerID, SUM(Amount) AS TotalSpent
+FROM Orders
+GROUP BY CustomerID
+ORDER BY TotalSpent DESC
+LIMIT 3;
+
+SELECT CustomerID
+FROM Orders
+GROUP BY CustomerID
+HAVING COUNT(*) = 1;
