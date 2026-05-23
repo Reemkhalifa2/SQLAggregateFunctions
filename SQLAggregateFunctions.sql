@@ -234,6 +234,21 @@ LEFT JOIN Products ON Sales.ProductID = Products.ProductID
 GROUP BY Products.ProductName
 ORDER BY SUM(Sales.Quantity) DESC;
 
+--TASK 17: Sales Time Analysis
 
+SELECT SaleDate, SUM(Quantity * Price) AS Revenue
+FROM Sales
+GROUP BY SaleDate;
 
+SELECT MONTH(SaleDate) AS Month, SUM(Quantity * Price) AS Revenue
+FROM Sales
+GROUP BY MONTH(SaleDate);
 
+SELECT TOP 1 SaleDate, SUM(Quantity * Price) AS Revenue
+FROM Sales
+GROUP BY SaleDate
+ORDER BY Revenue DESC;
+
+SELECT MONTH(SaleDate) AS Month, COUNT(*) 
+FROM Sales
+GROUP BY MONTH(SaleDate);
