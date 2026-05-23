@@ -276,3 +276,27 @@ SELECT CustomerID
 FROM Orders
 GROUP BY CustomerID
 HAVING COUNT(*) = 1;
+
+
+--Task 19
+SELECT Categories.CategoryName, SUM(Sales.Quantity * Sales.Price) AS Revenue , AVG(s.Quantity * s.Price) AS AvgRevenue
+FROM Sales 
+JOIN Products  ON Sales.ProductID = Products.ProductID
+JOIN Categories  ON Products.CategoryID = Categories.CategoryID
+GROUP BY Categories.CategoryName;
+
+
+
+SELECT Categories.CategoryName, SUM(Sales.Quantity * Sales.Price) AS Revenue
+FROM Sales 
+JOIN Products  ON Sales.ProductID = Products.ProductID
+JOIN Categories  ON Products.CategoryID = Categories.CategoryID
+GROUP BY Categories.CategoryName
+HAVING SUM(Sales.Quantity * Sales.Price) > 5000;
+
+SELECT Categories.CategoryName, SUM(Sales.Quantity * SAles.Price) AS Revenue
+FROM Sales 
+JOIN Products  ON Sales.ProductID = Products.ProductID
+JOIN Categories  ON Products.CategoryID = Categories.CategoryID
+GROUP BY Categories.CategoryName
+ORDER BY Revenue DESC;
